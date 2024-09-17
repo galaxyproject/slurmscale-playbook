@@ -56,6 +56,13 @@
       include_role:
         name: artis3n.tailscale
 
+    # This causes a tailscale logout on shutdown so we don't have to do it by hand
+    - name: Configure tailscale state=mem
+      ansible.builtin.lineinfile:
+        path: /etc/default/tailscaled
+        regexp: '^FLAGS='
+        line: 'FLAGS="--state=mem:"'
+
     - name: Install galaxy-job-execution
       pip:
         name: "{{ galaxy_job_execution_pip_name | default('galaxy-job-execution') }}"

@@ -1,0 +1,6 @@
+---
+
+os_image: usegalaxy-gxit-node
+
+# this is used not by the tailscale role (which uses tailscale_up_skip) but by the resume playbook
+tailscale_up: true

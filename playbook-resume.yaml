@@ -1,0 +1,91 @@
+---
+
+- name: Create groups for special node classes
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Create slurmscale group
+      ansible.builtin.group_by:
+        key: slurmscale
+      when: inventory_hostname.startswith(node_name_prefix)
+
+    - name: Create special node class groups
+      ansible.builtin.group_by:
+        key: "slurmscale_{{ inventory_hostname.replace(node_name_prefix, '').split('-', 1)[0] }}"
+      when: inventory_hostname.startswith(node_name_prefix) and (inventory_hostname.replace(node_name_prefix, '').split('-') | length) > 1
+
+- name: Spawn instances
+  hosts: slurmscale
+  gather_facts: false
+  environment:
+     OS_CLOUD: "{{ os_cloud_id }}"
+     OS_IDENTITY_API_VERSION: '3'
+
+  tasks:
+
+    - name: Instance spawn block
+      when: inventory_hostname.startswith(node_name_prefix)
+      block:
+
+        # WARNING: Slurm's ResumeTimeout must be larger than however long this *entire* playbook might run for, and the
+        # wait_for_connection task in the openstack role alone will wait up to 600 seconds.
+
+        - name: Import openstack role
+          ansible.builtin.import_role:
+            name: galaxyproject.general.openstack
+
+        - name: Gather Facts
+          ansible.builtin.gather_facts:
+          become: true
+
+        - name: Set CVMFS cache size for instance
+          ansible.builtin.lineinfile:
+            path: /etc/cvmfs/default.local
+            regexp: '^CVMFS_QUOTA_LIMIT=.*'
+            line: 'CVMFS_QUOTA_LIMIT="{{ (0.6 * ((ansible_mounts | selectattr("mount", "==", "/") | first).size_available) / 1024**2) | int }}"'
+            mode: "0644"
+          become: true
+
+        - name: Connect to tailnet
+          ansible.builtin.command: "/usr/bin/tailscale up --auth-key {{ slurm_scale_tailscale_authkey | quote }}"
+          become: true
+          when: tailscale_up
+
+        - name: Copy slurm config files
+          ansible.builtin.copy:
+            src: "{{ item.path }}"
+            dest: "{{ item.path }}"
+            mode: "{{ item.mode | default('0644') }}"
+          become: true
+          loop: "{{ slurmscale_resume_files }}"
+
+        - name: Log IP address
+          ansible.builtin.debug:
+            var: ansible_host
+
+        # This shouldn't be strictly necessary for started instances, but it can't hurt
+        - name: Update slurm controller with instance IP
+          ansible.builtin.command: scontrol update nodename={{ inventory_hostname }} nodeaddr={{ ansible_host }}
+          delegate_to: localhost
+          become: false
+
+        - name: Start slurmd
+          ansible.builtin.service:
+            name: slurmd
+            state: started
+          become: true
+
+      rescue:
+
+        - name: Destroy existing instance on start failure
+          openstack.cloud.server:
+            cloud: "{{ os_cloud_id }}"
+            name: "{{ inventory_hostname }}"
+            state: absent
+          when: inventory_hostname.startswith(node_name_prefix)
+          delegate_to: localhost
+          become: false
+
+        - name: Fail due to previous failure
+          ansible.builtin.fail:
+            msg: failed

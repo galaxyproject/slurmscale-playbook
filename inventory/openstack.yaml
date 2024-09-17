@@ -1,0 +1,8 @@
+---
+
+plugin: openstack
+#only_clouds:
+#  - js2
+private: true
+expand_hostvars: false
+#legacy_groups: false

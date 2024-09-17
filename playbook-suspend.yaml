@@ -1,0 +1,42 @@
+---
+
+# This is not necessary if the groups are set correctly from the openstack inventory plugin, but will be needed when
+# transitioning from the old playbook as it used galaxynodes as the metadata group name.
+- name: Create groups
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Create slurmscale group
+      ansible.builtin.group_by:
+        key: slurmscale
+
+- name: Stop instance(s)
+  hosts: slurmscale
+  connection: local
+  environment:
+     OS_CLOUD: "{{ os_cloud_id }}"
+     OS_IDENTITY_API_VERSION: '3'
+  tasks:
+    - name: Stop instance
+      openstack.cloud.server_action:
+        cloud: "{{ os_cloud_id }}"
+        name: "{{ inventory_hostname }}"
+        action: "stop"
+      delegate_to: localhost
+      become: false
+      ignore_errors: true
+
+    - name: Sleep
+      ansible.builtin.pause:
+        seconds: 60
+      run_once: true
+      delegate_to: localhost
+      become: false
+
+    - name: Destroy instance
+      openstack.cloud.server:
+        cloud: "{{ os_cloud_id }}"
+        name: "{{ inventory_hostname }}"
+        state: absent
+      delegate_to: localhost
+      become: false

@@ -29,6 +29,13 @@ slurmscale_stop_services:
   - rsyslog
   #- auditd
 
+slurmscale_resume_files:
+  - path: /etc/slurm/slurm.conf
+  - path: /etc/slurm/prolog.bash
+    mode: "0755"
+  - path: /etc/slurm/prolog.sh
+    mode: "0755"
+
 cvmfs_role: client
 # this is overridden on instance spawn anyway
 cvmfs_quota_limit: 8192

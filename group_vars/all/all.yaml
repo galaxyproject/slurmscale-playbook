@@ -2,3 +2,6 @@
 
 # Playbooks will refuse to operate on any instances whose names do not begin with this prefix
 node_name_prefix: "js2-"
+tailscale_up: false
+
+os_cloud_id: "js2"
