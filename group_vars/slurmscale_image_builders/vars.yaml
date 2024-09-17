@@ -1,0 +1,22 @@
+---
+
+# use the key written out by the openstack role
+#os_secrets:
+#  - dest: "{{ os_key_name }}.pem"
+#    content: "{{ openstack_privatekeys.admin }}"
+#ansible_ssh_private_key_file: "{{ inventory_dir }}/{{ os_key_name }}.pem"
+
+os_image: Featured-RockyLinux9
+os_flavor: m3.small
+os_auto_ip: false
+
+ceph_mount_state: present
+
+slurm_start_services: false
+
+tailscale_up_skip: true
+
+galaxy_job_execution_pip_name: git+https://github.com/natefoo/galaxy.git@tailscale-container-monitor#egg=galaxy-job-execution&subdirectory=packages/job_execution
+
+# Used by the image generation playbook, instances names match the image name
+usegalaxy_node_image_name: "{{ inventory_hostname }}"

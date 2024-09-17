@@ -1,0 +1,11 @@
+---
+
+all:
+  children:
+    slurmscale_image_builders:
+      hosts:
+        usegalaxy-node:
+        usegalaxy-gxit-node:
+      vars:
+        ansible_user: rocky
+        ansible_become: true

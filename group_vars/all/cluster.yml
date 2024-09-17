@@ -1,0 +1,81 @@
+---
+
+slurmscale_users:
+  - name: g2main
+    uid: 819800
+    group: G-803372
+  - name: g2test
+    uid: 819456
+    group: G-803372
+  - name: idc
+    uid: 808
+    group: idc
+
+slurmscale_groups:
+  - name: G-803372
+    gid: 803372
+  - name: idc
+    gid: 808
+
+slurmscale_packages:
+  #- autofs
+  - lzo
+  - git
+  - apptainer
+  - python39
+
+slurmscale_stop_services:
+  - tuned
+  - rsyslog
+  #- auditd
+
+cvmfs_role: client
+# this is overridden on instance spawn anyway
+cvmfs_quota_limit: 8192
+cvmfs_http_proxies:
+  - "http://{{ jetstream_local_cvmfs_proxy_address }}:3128/cvmfs/@fqrn@"
+  - "DIRECT"
+
+slurm_roles:
+  - exec
+
+slurm_munge_key: files/slurm/munge.key
+
+galaxy_cvmfs_repos_enabled: true
+
+galaxy_cvmfs_server_urls:
+  - domain: galaxyproject.org
+    use_geoapi: true
+    urls:
+      - "http://{{ jetstream_local_cvmfs_stratum1_address }}/cvmfs/@fqrn@"
+      - "http://cvmfs1-iu0.galaxyproject.org/cvmfs/@fqrn@"
+      - "http://cvmfs1-tacc0.galaxyproject.org/cvmfs/@fqrn@"
+      - "http://cvmfs1-psu0.galaxyproject.org/cvmfs/@fqrn@"
+
+slurm_user:
+  uid: 40302
+  gid: 40302
+  comment: 'Slurm Workload Manager'
+  home: /var/lib/slurm
+  shell: /bin/bash
+
+directories:
+  - path: /galaxy-repl/test
+    mode: "0755"
+  - path: /galaxy-repl/main
+    mode: "0755"
+  - path: /var/lib/slurm
+    mode: "0755"
+
+# symlinks for deps must exist due to path issues
+links:
+  - dest: /galaxy
+    src: /galaxy-repl
+  - dest: /galaxy-repl/test/deps
+    src: /cvmfs/test.galaxyproject.org/deps
+  - dest: /galaxy-repl/test/tool_data
+    src: /cvmfs/data.galaxyproject.org/byhand/location
+  - dest: /galaxy-repl/main/deps
+    src: /cvmfs/main.galaxyproject.org/deps
+  - dest: /galaxy-repl/main/tool_data
+    src: /cvmfs/data.galaxyproject.org/byhand/location

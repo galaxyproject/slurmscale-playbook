@@ -1,0 +1,4 @@
+*.sw*
+clouds.yaml
+collections/
+roles/*.*

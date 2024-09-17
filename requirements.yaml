@@ -1,0 +1,13 @@
+---
+
+roles:
+  - name: galaxyproject.slurm
+    version: 1.0.1
+  - name: galaxyproject.cvmfs
+    version: 0.2.23
+  - name: artis3n.tailscale
+    version: v3.2.3
+
+collections:
+  - name: galaxyproject.general
+    version: 1.2.0

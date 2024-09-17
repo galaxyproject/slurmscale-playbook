@@ -1,0 +1,64 @@
+---
+
+- name: Disable SELinux
+  ansible.posix.selinux:
+    state: disabled
+
+- name: Ensure firewalld is not installed
+  ansible.builtin.dnf:
+    name: firewalld
+    state: absent
+
+- name: Configure Ceph
+  ansible.builtin.import_role:
+    name: galaxyproject.general.ceph_mount
+
+- name: Import CVMFS role
+  ansible.builtin.import_role:
+    name: galaxyproject.cvmfs
+
+- name: Import Slurm role
+  ansible.builtin.import_role:
+    name: galaxyproject.slurm
+
+- name: Fix /var/spool/slurm perms
+  ansible.builtin.file:
+    path: /var/spool/slurm
+    owner: slurm
+    group: slurm
+    mode: "0755"
+
+# on restarts we want to wait until the playbook copies slurm.conf and starts slurmd itself
+- name: Disable slurmd autostart
+  ansible.builtin.service:
+    name: slurmd
+    enabled: false
+
+# docker is already installed in the feature image but if it wasn't you'd need to do it here
+#- name: Install Docker
+#  import_role:
+#    name: docker
+
+#- name: Add Galaxy users to docker group
+#  user:
+#    name: "{{ item.name }}"
+#    groups: docker
+#    append: true
+#  loop:
+#    - name: g2main
+#    - name: g2test
+
+- name: Tailscale block
+  when: install_tailscale
+  block:
+
+    - name: Install Tailscale
+      include_role:
+        name: artis3n.tailscale
+
+    - name: Install galaxy-job-execution
+      pip:
+        name: "{{ galaxy_job_execution_pip_name | default('galaxy-job-execution') }}"
+        extra_args: --extra-index-url=https://wheels.galaxyproject.org/
+        virtualenv: /opt/galaxy-job-execution
+        virtualenv_command: /usr/bin/python3.9 -m venv

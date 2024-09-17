@@ -1,0 +1,14 @@
+---
+
+openstack_manage_secrets: false
+
+os_image: usegalaxy-node
+#os_key_name: admin-kp
+os_key_name: nate-treehouse
+os_nics:
+  - net-name: usegalaxy
+os_security_groups: default
+os_auto_ip: no
+flavor_prefix: m3
+os_flavor: >-
+  {{ flavor_prefix }}.{{ inventory_hostname | regex_replace("^.*-([a-z\d]+[a-z]+)[\d]+.*", "\1") }}
