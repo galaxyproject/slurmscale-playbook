@@ -3,8 +3,7 @@
 openstack_manage_secrets: false
 
 os_image: usegalaxy-node
-#os_key_name: admin-kp
-os_key_name: nate-treehouse
+os_key_name: admin-kp
 os_nics:
   - net-name: usegalaxy
 os_security_groups: default
