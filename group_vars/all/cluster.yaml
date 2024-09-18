@@ -45,6 +45,12 @@ slurm_roles:
 
 slurm_munge_key: files/slurm/munge.key
 
+slurm_cgroup_config:
+  CgroupAutomount: yes
+  ConstrainCores: yes
+  ConstrainRAMSpace: yes
+  ConstrainSwapSpace: yes
+
 galaxy_cvmfs_repos_enabled: true
 
 slurm_user:
@@ -53,24 +59,3 @@ slurm_user:
   comment: 'Slurm Workload Manager'
   home: /var/lib/slurm
   shell: /bin/bash
-
-directories:
-  - path: /galaxy-repl/test
-    mode: "0755"
-  - path: /galaxy-repl/main
-    mode: "0755"
-  - path: /var/lib/slurm
-    mode: "0755"
-
-# symlinks for deps must exist due to path issues
-links:
-  - dest: /galaxy
-    src: /galaxy-repl
-  - dest: /galaxy-repl/test/deps
-    src: /cvmfs/test.galaxyproject.org/deps
-  - dest: /galaxy-repl/test/tool_data
-    src: /cvmfs/data.galaxyproject.org/byhand/location
-  - dest: /galaxy-repl/main/deps
-    src: /cvmfs/main.galaxyproject.org/deps
-  - dest: /galaxy-repl/main/tool_data
-    src: /cvmfs/data.galaxyproject.org/byhand/location
