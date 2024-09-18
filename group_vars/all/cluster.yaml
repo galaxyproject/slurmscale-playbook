@@ -39,9 +39,6 @@ slurmscale_resume_files:
 cvmfs_role: client
 # this is overridden on instance spawn anyway
 cvmfs_quota_limit: 8192
-cvmfs_http_proxies:
-  - "http://{{ jetstream_local_cvmfs_proxy_address }}:3128/cvmfs/@fqrn@"
-  - "DIRECT"
 
 slurm_roles:
   - exec
@@ -49,15 +46,6 @@ slurm_roles:
 slurm_munge_key: files/slurm/munge.key
 
 galaxy_cvmfs_repos_enabled: true
-
-galaxy_cvmfs_server_urls:
-  - domain: galaxyproject.org
-    use_geoapi: true
-    urls:
-      - "http://{{ jetstream_local_cvmfs_stratum1_address }}/cvmfs/@fqrn@"
-      - "http://cvmfs1-iu0.galaxyproject.org/cvmfs/@fqrn@"
-      - "http://cvmfs1-tacc0.galaxyproject.org/cvmfs/@fqrn@"
-      - "http://cvmfs1-psu0.galaxyproject.org/cvmfs/@fqrn@"
 
 slurm_user:
   uid: 40302
