@@ -39,14 +39,15 @@
 #  import_role:
 #    name: docker
 
-- name: Remove feature image docker images
-  community.docker.docker_image:
-    name: "{{ item }}"
-    state: absent
-    force_absent: true
-  loop:
-    - guacamole/guacamole
-    - guacamole/guacd-dev
+- name: Prune docker
+  community.docker.docker_prune:
+    containers: true
+    images: true
+    images_filters:
+      dangling: false
+    networks: true
+    volumes: true
+    builder_cache: true
 
 - name: Prefetch docker images
   community.docker.docker_image:
