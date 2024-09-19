@@ -16,7 +16,5 @@ slurm_start_services: false
 
 tailscale_up_skip: true
 
-galaxy_job_execution_pip_name: git+https://github.com/natefoo/galaxy.git@tailscale-container-monitor#egg=galaxy-job-execution&subdirectory=packages/job_execution
-
 # Used by the image generation playbook, instances names match the image name
 usegalaxy_node_image_name: "{{ inventory_hostname }}"
