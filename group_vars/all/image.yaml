@@ -2,5 +2,6 @@
 
 slurmscale_image_tasks_role: slurmscale_image
 
+enable_docker: false
 install_tailscale: false
 tailscale_up_skip: true
