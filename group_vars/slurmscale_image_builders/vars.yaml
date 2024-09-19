@@ -7,7 +7,7 @@
 #ansible_ssh_private_key_file: "{{ inventory_dir }}/{{ os_key_name }}.pem"
 
 os_image: Featured-RockyLinux9
-os_flavor: m3.small
+os_flavor: m3.medium
 os_auto_ip: false
 
 ceph_mount_state: present
