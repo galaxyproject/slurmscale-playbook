@@ -5,3 +5,7 @@ slurmscale_image_tasks_role: slurmscale_image
 enable_docker: false
 install_tailscale: false
 tailscale_up_skip: true
+
+slurmscale_docker_images:
+  - quay.io/bgruening/docker-jupyter-notebook:24.07
+  - quay.io/natefoo/docker-rstudio-notebook:23.1-proxy0

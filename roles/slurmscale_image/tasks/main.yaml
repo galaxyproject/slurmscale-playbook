@@ -39,6 +39,21 @@
 #  import_role:
 #    name: docker
 
+- name: Remove feature image docker images
+  community.docker.docker_image:
+    name: "{{ item }}"
+    state: absent
+    force_absent: true
+  loop:
+    - guacamole/guacamole
+    - guacamole/guacd-dev
+
+- name: Prefetch docker images
+  community.docker.docker_image:
+    name: "{{ item }}"
+  loop: "{{ slurmscale_docker_images | default([]) }}"
+  when: enable_docker
+
 - name: Disable docker service and socket
   ansible.builtin.systemd_service:
     name: "{{ item }}"
