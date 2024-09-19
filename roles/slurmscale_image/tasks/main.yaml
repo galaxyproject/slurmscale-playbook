@@ -51,6 +51,7 @@
 - name: Prefetch docker images
   community.docker.docker_image:
     name: "{{ item }}"
+    source: pull
   loop: "{{ slurmscale_docker_images | default([]) }}"
   when: enable_docker
 
