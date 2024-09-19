@@ -39,7 +39,6 @@
 #  import_role:
 #    name: docker
 
-
 - name: Disable docker service and socket
   ansible.builtin.systemd_service:
     name: "{{ item }}"
@@ -49,13 +48,12 @@
     - docker.service
   when: not enable_docker
 
-- name: Add Galaxy users to docker group
-  user:
-    name: "{{ item }}"
-    groups: docker
-    append: true
-  loop: "{{ slurmscale_docker_users | default([]) }}"
-  when: enable_docker
+# groups are passed from the controller, so the docker gid must match the controller, but precreated groups in the
+# feature image make this tricky
+- name: Set docker gid
+  ansible.builtin.group:
+    name: docker
+    gid: "{{ docker_gid }}"
 
 - name: Tailscale block
   when: install_tailscale

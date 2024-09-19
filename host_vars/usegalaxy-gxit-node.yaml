@@ -2,7 +2,3 @@
 
 enable_docker: true
 install_tailscale: true
-
-slurmscale_docker_users:
-  - g2main
-  - g2test
