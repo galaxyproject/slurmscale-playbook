@@ -9,6 +9,11 @@
     name: firewalld
     state: absent
 
+- name: Remove /software check script
+  ansible.builtin.file:
+    path: /etc/profile.d/z99-lmod-default-modules.sh
+    state: absent
+
 - name: Ensure Lmod is not installed
   ansible.builtin.dnf:
     name: Lmod
