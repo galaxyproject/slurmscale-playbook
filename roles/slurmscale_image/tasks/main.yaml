@@ -9,6 +9,11 @@
     name: firewalld
     state: absent
 
+- name: Ensure Lmod is not installed
+  ansible.builtin.dnf:
+    name: Lmod
+    state: absent
+
 - name: Remove /software mount
   ansible.posix.mount:
     path: /software
