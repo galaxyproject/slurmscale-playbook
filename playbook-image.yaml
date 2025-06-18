@@ -39,6 +39,7 @@
   hosts: slurmscale_image_builders
   environment:
     HISTFILE: null
+    LD_PRELOAD: null
   tasks:
 
     - name: Configure instance block
