@@ -9,7 +9,8 @@
     name: firewalld
     state: absent
 
-- name: Remove /software check script
+# this should've already been done in the spawn play
+- name: Remove defualt modules script
   ansible.builtin.file:
     path: /etc/profile.d/z99-lmod-default-modules.sh
     state: absent
@@ -18,6 +19,12 @@
   ansible.builtin.dnf:
     name: Lmod
     state: absent
+
+# /software is mounted as a systemd automount configured via /etc/fstab. The Ansible mount module (at least in
+# ansible.posix 1.5.4) appears to not understand this, and regular `umount` has to be run twice (and can still sometimes
+# fail to fully unmount), thus we systemd-umount first. This does not fail if run repeatedly.
+- name: systemd-umount /software
+  ansible.builtin.command: systemd-umount /software
 
 - name: Remove /software mount
   ansible.posix.mount:

@@ -2,10 +2,11 @@
 
 - name: Spawn instances
   hosts: slurmscale_image_builders
-  gather_facts: no
+  gather_facts: false
   environment:
     OS_CLOUD: "{{ os_cloud_id }}"
     OS_IDENTITY_API_VERSION: '3'
+    HISTFILE: null
   tasks:
 
     - name: Spawn instance block
@@ -18,6 +19,12 @@
         - name: Import openstack role
           ansible.builtin.import_role:
             name: galaxyproject.general.openstack
+
+        # Done immediately so that $LD_PRELOAD is not set to xalt on /software in the next play
+        - name: Remove default modules script
+          ansible.builtin.file:
+            path: /etc/profile.d/z99-lmod-default-modules.sh
+            state: absent
 
       rescue:
 
@@ -37,14 +44,17 @@
 
 - name: Configure instance(s)
   hosts: slurmscale_image_builders
+  gather_facts: false
   environment:
     HISTFILE: null
-    LD_PRELOAD: null
   tasks:
 
     - name: Configure instance block
       when: not task_failed_successfully
       block:
+
+        - name: Gather facts
+          ansible.builtin.setup:
 
         # We got the router blocked somehow, but it's ok since we don't need updates from ELRepo currently (but the
         # repo config ships in Featured-RockyLinux8 currently)
@@ -167,7 +177,7 @@
 
 - name: Finalize image
   hosts: slurmscale_image_builders
-  gather_facts: no
+  gather_facts: false
   environment:
     OS_CLOUD: "{{ os_cloud_id }}"
     OS_IDENTITY_API_VERSION: '3'
