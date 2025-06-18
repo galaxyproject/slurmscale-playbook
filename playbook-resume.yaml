@@ -69,6 +69,12 @@
           delegate_to: localhost
           become: false
 
+        # This should not be necessary but sometimes seems to be (and is harmless other than a bit of extra time)
+        - name: Ensure Ceph is mounted
+          ansible.builtin.import_role:
+            name: galaxyproject.general.ceph_mount
+          become: true
+
         - name: Start slurmd
           ansible.builtin.service:
             name: slurmd
