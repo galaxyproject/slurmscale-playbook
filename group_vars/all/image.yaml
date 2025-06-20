@@ -8,4 +8,4 @@ tailscale_up_skip: true
 
 slurmscale_docker_images:
   - quay.io/bgruening/docker-jupyter-notebook:24.07
-  - bioconductor/galaxy-rstudio:RELEASE_3_21
+  - afgane/bioc-galaxy:3.21.live.2
