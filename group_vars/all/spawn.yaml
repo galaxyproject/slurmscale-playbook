@@ -11,3 +11,7 @@ os_auto_ip: no
 flavor_prefix: m3
 os_flavor: >-
   {{ flavor_prefix }}.{{ inventory_hostname | regex_replace("^.*-([a-z\d]+[a-z]+)[\d]+.*", "\1") }}
+
+
+openstack_spawn_timeout: 180
+openstack_wait_timeout: 240
