@@ -63,6 +63,12 @@
           ansible.builtin.debug:
             var: ansible_host
 
+        - name: Ensure munged is started
+          ansible.builtin.service:
+            name: munge
+            state: started
+          become: true
+
         # This shouldn't be strictly necessary for started instances, but it can't hurt
         - name: Update slurm controller with instance IP
           ansible.builtin.command: scontrol update nodename={{ inventory_hostname }} nodeaddr={{ ansible_host }}
