@@ -6,6 +6,7 @@ all:
       hosts:
         usegalaxy-node:
         usegalaxy-gxit-node:
+        usegalaxy-gpu-xl-node:
       vars:
         ansible_user: rocky
         ansible_become: true

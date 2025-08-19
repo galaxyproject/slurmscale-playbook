@@ -115,3 +115,23 @@
         extra_args: --extra-index-url=https://wheels.galaxyproject.org/
         virtualenv: /opt/galaxy-job-execution
         virtualenv_command: /usr/bin/python3.9 -m venv
+
+- name: Nvidia driver block
+  when: install_nvidia_non_grid_driver
+  block:
+
+    - name: Remove GRID driver
+      ansible.builtin.dnf:
+        name: nvidia-linux-grid-535
+        state: absent
+
+    - name: Install Nvidia repo
+      ansible.builtin.command: dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/cuda-rhel9.repo
+
+    - name: Install Nvidia driver
+      ansible.builtin.command: dnf module install -y -q nvidia-driver:565-open
+
+    - name: Enable nvidia-persistenced
+      ansible.builtin.systemd:
+        name: nvidia-persistenced.service
+        enabled: true

@@ -5,6 +5,7 @@ slurmscale_image_tasks_role: slurmscale_image
 enable_docker: false
 install_tailscale: false
 tailscale_up_skip: true
+install_nvidia_non_grid_driver: false
 
 slurmscale_docker_images:
   - quay.io/bgruening/docker-jupyter-notebook:24.07
