@@ -14,6 +14,11 @@
         key: "slurmscale_{{ inventory_hostname.replace(node_name_prefix, '').split('-', 1)[0] }}"
       when: inventory_hostname.startswith(node_name_prefix) and (inventory_hostname.replace(node_name_prefix, '').split('-') | length) > 1
 
+    - name: Create special node subclass groups
+      ansible.builtin.group_by:
+        key: "slurmscale_{{ inventory_hostname.replace(node_name_prefix, '').split('-', 1)[0] }}_{{ inventory_hostname.replace(node_name_prefix, '').split('-', 1)[1].rstrip('0123456789') }}"
+      when: inventory_hostname.startswith(node_name_prefix) and (inventory_hostname.replace(node_name_prefix, '').split('-') | length) > 1
+
 - name: Spawn instances
   hosts: slurmscale
   gather_facts: false
