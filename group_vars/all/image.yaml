@@ -9,4 +9,4 @@ install_nvidia_non_grid_driver: false
 
 slurmscale_docker_images:
   - quay.io/bgruening/docker-jupyter-notebook:24.07
-  - afgane/bioc-galaxy:3.21.live.2
+  - afgane/bioc-galaxy:3.21
