@@ -10,4 +10,4 @@ collections:
   - name: galaxyproject.general
     version: 1.4.1
   - name: artis3n.tailscale
-    version: v1.2.0
+    version: 1.2.0
