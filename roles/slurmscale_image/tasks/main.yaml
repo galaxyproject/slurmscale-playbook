@@ -100,7 +100,7 @@
 
     - name: Install Tailscale
       include_role:
-        name: artis3n.tailscale
+        name: artis3n.tailscale.machine
 
     # This causes a tailscale logout on shutdown so we don't have to do it by hand
     - name: Configure tailscale state=mem
