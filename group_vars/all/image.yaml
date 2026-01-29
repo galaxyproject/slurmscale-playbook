@@ -8,5 +8,5 @@ tailscale_up_skip: true
 install_nvidia_non_grid_driver: false
 
 slurmscale_docker_images:
-  - quay.io/bgruening/docker-jupyter-notebook:25.12.1
+  - quay.io/galaxy/docker-jupyter-notebook:25.12.1
   - bioconductor/galaxy-rstudio:RELEASE_3_22
