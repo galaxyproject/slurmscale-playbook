@@ -1,6 +1,9 @@
 ---
 
 os_image: usegalaxy-gxit-node
+os_boot_from_volume: true
+os_terminate_volume: true
+os_volume_size: 120
 
 # this is used not by the tailscale role (which uses tailscale_up_skip) but by the resume playbook
 tailscale_up: true
