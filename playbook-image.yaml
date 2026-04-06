@@ -209,7 +209,10 @@
 
         # Can't believe there's no module for this
         - name: Create an image from the instance
-          ansible.builtin.command: "openstack server image create --wait --shared --name {{ usegalaxy_node_image_name }} {{ inventory_hostname }}"
+          ansible.builtin.command: "openstack server image create --wait --name {{ usegalaxy_node_image_name }} {{ inventory_hostname }}"
+
+        - name: Set image to shared
+          ansible.builtin.command: "openstack image set --shared {{ usegalaxy_node_image_name }}"
 
         - name: Share image with additional project(s)
           ansible.builtin.command: "openstack image add project {{ usegalaxy_node_image_name }} {{ item.id }}"
