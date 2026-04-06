@@ -235,3 +235,4 @@
       environment:
         OS_CLOUD: "js2-{{ item.name }}"
       loop: "{{ usegalaxy_node_image_share_projects }}"
+      delegate_to: localhost
