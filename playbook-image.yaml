@@ -211,11 +211,21 @@
         - name: Create an image from the instance
           ansible.builtin.command: "openstack server image create --wait --name {{ usegalaxy_node_image_name }} {{ inventory_hostname }}"
 
+        - name: Collect new node image info
+          openstack.cloud.image_info:
+            image: "{{ usegalaxy_node_image_name }}"
+          register: __new_usegalaxy_node_image
+
+        # Technically only the accept requires the ID, but since we have to collect it, use it for everything
+        - name: Set new node image id fact
+          ansible.builtin.set_fact:
+            __usegalaxy_node_image_id: "{{ (__new_usegalaxy_node_image.images | first).id }}"
+
         - name: Set image to shared
-          ansible.builtin.command: "openstack image set --shared {{ usegalaxy_node_image_name }}"
+          ansible.builtin.command: "openstack image set --shared {{ __usegalaxy_node_image_id }}"
 
         - name: Share image with additional project(s)
-          ansible.builtin.command: "openstack image add project {{ usegalaxy_node_image_name }} {{ item.id }}"
+          ansible.builtin.command: "openstack image add project {{ __usegalaxy_node_image_id }} {{ item.id }}"
           loop: "{{ usegalaxy_node_image_share_projects }}"
 
       always:
@@ -231,7 +241,7 @@
   tasks:
 
     - name: Accept shared image
-      ansible.builtin.command: "openstack image set --accept {{ usegalaxy_node_image_name }}"
+      ansible.builtin.command: "openstack image set --accept {{ __usegalaxy_node_image_id }}"
       environment:
         OS_CLOUD: "js2-{{ item.name }}"
       loop: "{{ usegalaxy_node_image_share_projects }}"
