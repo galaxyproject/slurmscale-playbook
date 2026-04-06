@@ -21,3 +21,8 @@ usegalaxy_node_image_name: "{{ inventory_hostname }}"
 
 # https://github.com/galaxyproject/galaxy/pull/18863
 galaxy_job_execution_pip_name: git+https://github.com/natefoo/galaxy.git@container-monitor-retry-post#egg=galaxy-job-execution&subdirectory=packages/job_execution
+
+# Projects to share image(s) with
+usegalaxy_node_image_share_projects:
+  - name: BIO250460
+    id: 0e70a73d5a49406e8f47f2be62bec592

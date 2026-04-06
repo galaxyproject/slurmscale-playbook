@@ -209,7 +209,11 @@
 
         # Can't believe there's no module for this
         - name: Create an image from the instance
-          ansible.builtin.command: "openstack server image create --wait --name {{ usegalaxy_node_image_name }} {{ inventory_hostname }}"
+          ansible.builtin.command: "openstack server image create --wait --shared --name {{ usegalaxy_node_image_name }} {{ inventory_hostname }}"
+
+        - name: Share image with additional project(s)
+          ansible.builtin.command: "openstack image add project {{ usegalaxy_node_image_name }} {{ item.id }}"
+          loop: "{{ usegalaxy_node_image_share_projects }}"
 
       always:
 
@@ -217,3 +221,14 @@
           openstack.cloud.server:
             name: "{{ inventory_hostname }}"
             state: absent
+
+- name: Accept shared image
+  hosts: slurmscale_image_builders
+  gather_facts: false
+  tasks:
+
+    - name: Accept shared image
+      ansible.builtin.command: "openstack image set --accept {{ usegalaxy_node_image_name }}"
+      environment:
+        OS_CLOUD: "js2-{{ item.name }}"
+      loop: "{{ usegalaxy_node_image_share_projects }}"
