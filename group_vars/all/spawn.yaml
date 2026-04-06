@@ -8,7 +8,8 @@ os_nics:
   - net-name: usegalaxy
 os_security_groups:
   - default
-  - usegalaxy-node
+  # Identification by UUID necessary for shared security groups
+  - 2732c540-aa21-489b-9ce2-80be999cb1ff  # usegalaxy-node (MCB140147)
 os_auto_ip: no
 flavor_prefix: m3
 os_flavor: >-
