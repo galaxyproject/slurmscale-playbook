@@ -9,6 +9,10 @@
     - name: Create slurmscale group
       ansible.builtin.group_by:
         key: slurmscale
+    - name: Create special node class groups
+      ansible.builtin.group_by:
+        key: "slurmscale_{{ inventory_hostname.replace(node_name_prefix, '').split('-', 1)[0] }}"
+      when: inventory_hostname.startswith(node_name_prefix) and (inventory_hostname.replace(node_name_prefix, '').split('-') | length) > 1
 
 - name: Stop instance(s)
   hosts: slurmscale
