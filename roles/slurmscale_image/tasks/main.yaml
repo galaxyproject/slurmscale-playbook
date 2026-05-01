@@ -20,6 +20,11 @@
     name: Lmod
     state: absent
 
+- name: Remove yum repo files installing from /software
+  ansible.builtin.file:
+    path: /etc/yum.repos.d/nvidia-jetstream2.repo
+    state: absent
+
 # /software is mounted as a systemd automount configured via /etc/fstab. The Ansible mount module (at least in
 # ansible.posix 1.5.4) appears to not understand this, and regular `umount` has to be run twice (and can still sometimes
 # fail to fully unmount), thus we systemd-umount first. This does not fail if run repeatedly.
