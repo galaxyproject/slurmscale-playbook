@@ -90,6 +90,11 @@
           loop: "{{ slurmscale_users }}"
           when: slurmscale_users is defined
 
+        - name: Update Packages
+          ansible.builtin.dnf:
+            name: '*'
+            state: latest
+
         - name: Install Packages
           ansible.builtin.package:
             name: "{{ slurmscale_packages }}"
