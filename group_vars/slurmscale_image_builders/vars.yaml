@@ -10,6 +10,12 @@ os_image: Featured-RockyLinux9
 os_flavor: m3.medium
 os_auto_ip: false
 
+kernel_modprobe_denylist:
+  # dirtyfrag
+  - esp4
+  - esp6
+  - rxrpc
+
 ceph_mount_state: present
 
 slurm_start_services: false
