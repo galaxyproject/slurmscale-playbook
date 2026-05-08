@@ -27,11 +27,11 @@
 
 - name: Denylist kernel modules
   ansible.builtin.copy:
-	dest: /etc/modprobe.d/ansible-denylist.conf
-	owner: root
-	group: root
-	mode: "0644"
-	content: |
+    dest: /etc/modprobe.d/ansible-denylist.conf
+    owner: root
+    group: root
+    mode: "0644"
+    content: |
       {% for module in kernel_modprobe_denylist %}
       install {{ module }} /bin/false
       {% endfor %}
