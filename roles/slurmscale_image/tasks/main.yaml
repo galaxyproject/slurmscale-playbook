@@ -35,7 +35,7 @@
       {% for module in kernel_modprobe_denylist %}
       install {{ module }} /bin/false
       {% endfor %}
-    when: kernel_modprobe_denylist is defined and kernel_modprobe_denylist | truthy
+  when: kernel_modprobe_denylist is defined and kernel_modprobe_denylist | truthy
 
 # /software is mounted as a systemd automount configured via /etc/fstab. The Ansible mount module (at least in
 # ansible.posix 1.5.4) appears to not understand this, and regular `umount` has to be run twice (and can still sometimes
