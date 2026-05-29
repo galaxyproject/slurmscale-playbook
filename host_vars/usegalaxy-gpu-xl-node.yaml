@@ -1,3 +1,4 @@
 ---
 
+enable_gpu_drivers: true
 install_nvidia_non_grid_driver: true

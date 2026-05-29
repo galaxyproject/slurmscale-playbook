@@ -2,4 +2,3 @@
 
 flavor_prefix: g3
 os_image: usegalaxy-gpu-node
-enable_gpu_drivers: true
