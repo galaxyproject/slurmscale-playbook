@@ -4,26 +4,26 @@
   ansible.posix.selinux:
     state: disabled
 
-- name: Ensure firewalld is not installed
-  ansible.builtin.dnf:
-    name: firewalld
-    state: absent
-
 # this should've already been done in the spawn play
 - name: Remove defualt modules script
   ansible.builtin.file:
     path: /etc/profile.d/z99-lmod-default-modules.sh
     state: absent
 
-- name: Ensure Lmod is not installed
+- name: Ensure listed packages are not installed
   ansible.builtin.dnf:
-    name: Lmod
+    name: "{{ item }}"
     state: absent
+  loop: "{{ packages_absent | default([]) }}"
 
-- name: Remove yum repo files installing from /software
+- name: Remove unneeded yum repo files
   ansible.builtin.file:
-    path: /etc/yum.repos.d/nvidia-jetstream2.repo
+    path: "/etc/yum.repos.d/{{ item }}"
     state: absent
+  loop:
+    # Installs from now-nonexistent /software so breaks yum update
+    - nvidia-jetstream2.repo
+    - TurboVNC.repo
 
 - name: Denylist kernel modules
   ansible.builtin.copy:
@@ -78,38 +78,70 @@
 #  import_role:
 #    name: docker
 
-- name: Prune docker
-  community.docker.docker_prune:
-    containers: true
-    images: true
-    images_filters:
-      dangling: false
-    networks: true
-    volumes: true
-    builder_cache: true
-
-- name: Prefetch docker images
-  community.docker.docker_image:
-    name: "{{ item }}"
-    source: pull
-  loop: "{{ slurmscale_docker_images | default([]) }}"
+- name: Enable Docker block
   when: enable_docker
+  block:
 
-- name: Disable docker service and socket
-  ansible.builtin.systemd_service:
-    name: "{{ item }}"
-    masked: true
-  loop:
-    - docker.socket
-    - docker.service
+    - name: Prune docker
+      community.docker.docker_prune:
+        containers: true
+        images: true
+        images_filters:
+          dangling: false
+        networks: true
+        volumes: true
+        builder_cache: true
+
+    - name: Prefetch docker images
+      community.docker.docker_image:
+        name: "{{ item }}"
+        source: pull
+      loop: "{{ slurmscale_docker_images | default([]) }}"
+      when: enable_docker
+
+    # groups are passed from the controller, so the docker gid must match the controller, but precreated groups in the
+    # feature image make this tricky
+    - name: Set docker gid
+      ansible.builtin.group:
+        name: docker
+        gid: "{{ docker_gid }}"
+
+- name: Disable Docker block
   when: not enable_docker
+  block:
 
-# groups are passed from the controller, so the docker gid must match the controller, but precreated groups in the
-# feature image make this tricky
-- name: Set docker gid
-  ansible.builtin.group:
-    name: docker
-    gid: "{{ docker_gid }}"
+    - name: Disable docker service and socket
+      ansible.builtin.systemd_service:
+        name: "{{ item }}"
+        masked: true
+      loop:
+        - docker.socket
+        - docker.service
+      when: not enable_docker
+
+    - name: Uninstall docker packages
+      ansible.builtin.dnf:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: absent
+
+    - name: Remove docker yum repo
+      ansible.builtin.file:
+        path: /etc/yum.repos.d/docker-ce.repo
+        state: absent
+
+- name: Remove unneeded yum repo files
+  ansible.builtin.file:
+    path: "/etc/yum.repos.d/{{ item }}"
+    state: absent
+  loop:
+    # Installs from now-nonexistent /software so breaks yum update
+    - nvidia-jetstream2.repo
+    - docker-ce.repo
 
 - name: Tailscale block
   when: install_tailscale
