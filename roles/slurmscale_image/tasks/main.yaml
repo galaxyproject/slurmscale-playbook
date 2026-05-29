@@ -134,15 +134,6 @@
         path: /etc/yum.repos.d/docker-ce.repo
         state: absent
 
-- name: Remove unneeded yum repo files
-  ansible.builtin.file:
-    path: "/etc/yum.repos.d/{{ item }}"
-    state: absent
-  loop:
-    # Installs from now-nonexistent /software so breaks yum update
-    - nvidia-jetstream2.repo
-    - docker-ce.repo
-
 - name: Tailscale block
   when: install_tailscale
   block:
