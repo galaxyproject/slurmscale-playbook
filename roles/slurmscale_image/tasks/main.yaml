@@ -165,8 +165,8 @@
         virtualenv: /opt/galaxy-job-execution
         virtualenv_command: /usr/bin/python3.9 -m venv
 
-- name: Nvidia driver block
-  when: install_nvidia_non_grid_driver
+- name: Nvidia non-GRID driver block
+  when: enable_gpu_drivers and install_nvidia_non_grid_driver
   block:
 
     - name: Remove GRID driver
@@ -184,3 +184,19 @@
       ansible.builtin.systemd:
         name: nvidia-persistenced.service
         enabled: true
+
+- name: Disable GPU drivers block
+  when: not enable_gpu_drivers
+  block:
+
+    - name: Uninstall Nvidia packages
+      ansible.builtin.dnf:
+        name:
+          - nvidia-container-toolkit
+          - nvidia-linux-grid-535
+        state: absent
+
+    - name: Remove Nvidia yum repo
+      ansible.builtin.file:
+        path: /etc/yum.repos.d/cuda.repo
+        state: absent
