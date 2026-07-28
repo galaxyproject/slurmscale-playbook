@@ -169,7 +169,7 @@
       ansible.builtin.command: dnf config-manager --add-repo https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/cuda-rhel9.repo
 
     - name: Install Nvidia driver
-      ansible.builtin.command: dnf module install -y -q nvidia-driver:565-open
+      ansible.builtin.command: dnf module install -y -q nvidia-driver:580-open
 
     - name: Enable nvidia-persistenced
       ansible.builtin.systemd:
