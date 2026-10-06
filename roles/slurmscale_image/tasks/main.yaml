@@ -162,7 +162,7 @@
 
     - name: Remove GRID driver
       ansible.builtin.dnf:
-        name: nvidia-linux-grid-535
+        name: nvidia-linux-grid-*
         state: absent
 
     - name: Install Nvidia repo
