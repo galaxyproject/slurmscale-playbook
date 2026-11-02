@@ -184,7 +184,10 @@
       ansible.builtin.dnf:
         name:
           - nvidia-container-toolkit
-          - nvidia-linux-grid-535
+          - nvidia-container-toolkit-base
+          - libnvidia-container-tools
+          - libnvidia-container1
+          - nvidia-linux-grid-*
         state: absent
 
     - name: Remove Nvidia yum repo

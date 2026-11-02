@@ -19,6 +19,8 @@ packages_absent:
   - tigervnc-server-minimal
   - tigervnc-server
   - tigervnc-selinux
+  - gdm
+  - gnome-shell
 
 kernel_modprobe_denylist:
   # dirtyfrag
