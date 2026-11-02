@@ -8,6 +8,7 @@ all:
         usegalaxy-gxit-node:
         usegalaxy-gpu-node:
         usegalaxy-gpu-xl-node:
+        usegalaxy-udt-node:
       vars:
         ansible_user: rocky
         ansible_become: true

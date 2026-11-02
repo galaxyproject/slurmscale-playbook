@@ -1,0 +1,9 @@
+---
+
+os_image: usegalaxy-udt-node
+os_nics:
+  - net-name: usegalaxy-udt
+os_security_groups:
+  - usegalaxy-udt-node
+
+ceph_mounts: "{{ ceph_udt_mounts }}"

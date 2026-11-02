@@ -1,0 +1,23 @@
+---
+
+# 20 GB root disk so the image boots on every m3 flavor
+os_flavor: m3.small
+os_nics:
+  - net-name: usegalaxy-udt
+# default for egress during the build only
+os_security_groups:
+  - default
+  - usegalaxy-udt-node
+
+ceph_mounts: "{{ ceph_udt_mounts }}"
+
+slurmscale_groups:
+  - name: udtjobs
+    gid: 837
+
+slurmscale_users:
+  - name: udtjobs
+    uid: 837
+    group: udtjobs
+
+usegalaxy_node_image_share_projects: []
