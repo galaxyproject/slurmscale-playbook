@@ -16,7 +16,6 @@ packages_absent:
   - environment-modules
   - PackageKit-command-not-found
   - cifs-utils
-  - cvmfs-config-default
   - turbovnc
   - tigervnc-license
   - tigervnc-server-minimal
