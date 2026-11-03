@@ -13,6 +13,8 @@ os_auto_ip: false
 packages_absent:
   - firewalld
   - Lmod
+  - environment-modules
+  - PackageKit-command-not-found
   - cifs-utils
   - turbovnc
   - tigervnc-license
