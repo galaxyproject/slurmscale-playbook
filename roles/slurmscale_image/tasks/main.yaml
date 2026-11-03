@@ -4,11 +4,15 @@
   ansible.posix.selinux:
     state: disabled
 
-# this should've already been done in the spawn play
-- name: Remove defualt modules script
+# the modules script should've already been removed in the spawn play
+- name: Remove profile scripts
   ansible.builtin.file:
-    path: /etc/profile.d/z99-lmod-default-modules.sh
+    path: "/etc/profile.d/{{ item }}"
     state: absent
+  loop:
+    - z99-lmod-default-modules.sh
+    # calls out to the Jetstream2 status page on every login
+    - 99-js2status.sh
 
 - name: Ensure listed packages are not installed
   ansible.builtin.dnf:
